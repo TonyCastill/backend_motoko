@@ -1,27 +1,45 @@
-import Random "mo:base/Random";
-/*
-  Módulo que permite generar números aleatorios
-
-*/
-
 actor {
-  var randomNumber: Nat = 0;
-  public query func  getCurrentRandomNumber(): async Nat{
-    return randomNumber;
-  };
-  private func getRandomNat(): async (){
-    let randomBlob = await Random.blob();
-    randomNumber := Random.rangeFrom(8,randomBlob);
+  type WeekDays ={
+    //Variants 
+    // En este caso, la variable day puede adquirir cualquier
+    // valor de los siguientes, uno a la vez
+    // El # define un variant
+    #monday;
+    #tuesday;
+    #wednesday;
+    #thursday;
+    #friday;
+    #saturday;
+    #sunday;
   };
 
-  public func generateRandomNat() : (){
-    ignore getRandomNat(); // Does not return anything
-  };
+  type Months = {
+  // Variants for months of the year
+  #january;
+  #february;
+  #march;
+  #april;
+  #may;
+  #june;
+  #july;
+  #august;
+  #september;
+  #october;
+  #november;
+  #december;
+};
 
-  public query func guessTheNumber(number:Nat) :async Text{
-    if(number!=randomNumber){
-      return "Número equivocado";
+  let monday: WeekDays = #monday;
+
+  public query func getWeekDay(day: WeekDays): async Text{
+    switch(day){
+      case (#monday){return "Monday"};
+      case (#tuesday){"tuesday"};
+      case (#wednesday){"wednesday"};
+      case (#thursday){"Thursday"};
+      case (#friday){"Friday"};
+      case (#saturday){"Saturday"};
+      case (#sunday){"Sunday"};
     };
-    return "Le atinaste!";
-  }
+  };
 }
