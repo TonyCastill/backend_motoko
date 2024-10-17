@@ -1,30 +1,38 @@
 import Nat "mo:base/Nat";
 import Debug "mo:base/Debug";
 import Iter "mo:base/Iter";
+import HashMap "mo:base/HashMap";
+import Hash "mo:base/Hash";
+
 
 actor {
-  public query func startLoop(): async () {
-    var counter = 0;
+  type Profile = {
+    username: Text;
+    email: Text;
+  };
 
-    /* o esto
-    loop { //Iteraciones
-    // Muestra en consola
-      Debug.print("Counter: " # Nat.toText(counter));
-      counter +=1;
+  let profiles = HashMap.HashMap<Nat, Profile>(5, Nat.equal, Hash.hash);
+  private func getNextId(): Nat {
+    return profiles.size();
+    // Solo devuevle el tamaño del ID
+  };
 
-      //Parar loop
-      if (counter == 10) {return};
-    }
-    */
-    // o esto
-    /*while ( counter < 10){
-      Debug.print("Counter: "# Nat.toText(counter));
-      counter += 1;
-    };*/
-    var i = 0;
-    for (j in Iter.range(0,9)){
-      Debug.print(debug_show(j));
-      i +=1;
+  public func addProfile(newProfile: Profile): () {
+    //Agarra el siguiente ID y lo asigna a nextId
+    let nextId = getNextId();
+    // con put.() agrega un nuevo registro
+    // Esto no es una lista, por lo que si se aplica
+    // a un elemento que ya tiene un índice, este elemento
+    // se sobreescribe
+    profiles.put(nextId,newProfile);
+  };
+
+  public query func getProfiles(): async [Profile]{
+    let profileIter = profiles.vals();
+
+    for (id in profiles.keys()){
+      Debug.print("Profile id: " # Nat.toText(id));
     };
+    return Iter.toArray(profileIter);
   };
 }
